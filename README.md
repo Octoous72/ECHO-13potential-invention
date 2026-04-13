@@ -1,4 +1,4 @@
-ECHO-13:A Continuous Unfolding Computational Language                                              
+
 ECHO‑13 is a deterministic symbolic language for modeling continuous evolution through entities, traces, relational dynamics, braid geometry, and non‑destructive Soft Overlap Compression (SOR). It provides a formal system where identity is preserved through time, history accumulates instead of being overwritten, and interactions between entities generate structured geometric and environmental effects.
 
 This repository contains the minimal Python reference implementation of the ECHO‑13 unfolding engine, along with documentation and examples for researchers interested in symbolic computation, emergent systems, and continuous dynamical models.
