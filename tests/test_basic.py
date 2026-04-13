@@ -1,5 +1,5 @@
 """
-test_basic.py — ECHO-13 Foundation Tests
+test_basic.py - ECHO-13 Foundation Tests
 =========================================
 Verifies core engine and graph functionality.
 """
