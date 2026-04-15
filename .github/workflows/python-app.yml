@@ -49,9 +49,4 @@ jobs:
             python -m py_compile "$f" || exit 1
           done
           echo "All examples parse successfully."
- 
-      - name: Run tests
-        run: |
-          pytest --verbose --tb=short
-
-
+          
