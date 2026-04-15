@@ -47,8 +47,13 @@ jobs:
            echo "Checking: $f"
            python -m py_compile "$f" || exit 1
           done
-          echo "All examples parse successfully."          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+          echo "All examples parse successfully."
 
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+ 
       - name: Run tests
         run: |
           pytest --verbose --tb=short
