@@ -50,6 +50,6 @@ jobs:
         run: |
           for f in examples/*.py; do
             echo "Checking: $f"
-            python -c "import ast; ast.parse(open('$f').read())" || exit 1
+            python -c "import ast; ast.parse(open(\"$f\").read())" || exit 1
           done
           echo "All examples parse successfully."
