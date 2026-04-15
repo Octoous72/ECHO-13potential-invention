@@ -52,4 +52,4 @@ jobs:
             echo "Checking: $f"
             python -c "import ast; ast.parse(open('$f').read())" || exit 1
           done
-          echo "All examples parse successfully.
+          echo "All examples parse successfully."
