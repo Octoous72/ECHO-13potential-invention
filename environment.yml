@@ -1,0 +1,1 @@
+name: myenv\nchannels:\n  - defaults\ndependencies:\n  - python=3.10\n  - python=3.11\n  - python=3.12\n  - pytest\n  - flake8\n
