@@ -1,1 +1,9 @@
-name: myenv\nchannels:\n  - defaults\ndependencies:\n  - python=3.10\n  - python=3.11\n  - python=3.12\n  - pytest\n  - flake8\n
+name: myenv\nchannels:\n  - defaults\ndependencies:\n  - python=3.10\n  - python=3.11\n  - python=3.1name: base
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - flake8
+  - pytest
+  # ... other dependencies2\n  - pytest\n  - flake8\n 
