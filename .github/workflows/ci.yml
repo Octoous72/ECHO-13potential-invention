@@ -61,8 +61,7 @@ jobs:
            name: echo13-dist
            path: dist/
          if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
-publish:
+    publish:
        name: Publish to PyPI
        needs: build-test-lint
        runs-on: ubuntu-latest
