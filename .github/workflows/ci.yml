@@ -1,0 +1,85 @@
+name: ECHO-13 CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-test-lint:
+    name: Lint, Test, and Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ "3.10", "3.11", "3.12" ] 
+
+    steps:
+       - name: Check out repository
+         uses: actions/checkout@v4
+
+       - name: Set up Miniconda
+         uses: conda-incubator/setup-miniconda@v3
+         with:
+           auto-update-conda: true
+           activate-environment: echo13
+           environment-file: environment.yml
+           python-version: ${{ matrix.python-version }}
+
+       - name: Cache Conda packages
+         uses: actions/cache@v4
+         with:
+           path: ~/.conda
+           key: conda-${{ runner.os }}-${{ matrix.python-version }}
+           restore-keys: |
+             conda-${{ runner.os }}-
+
+       - name: Install dev dependencies
+         run: |
+           pip install -U pip
+           pip install black isort flake8 pytest build twine
+
+       - name: Run Black (code formatter)
+         run: black --check .
+
+       - name: Run isort (import sorter)
+         run: isort --check-only .
+
+       - name: Run Flake8 (linting)
+         run: flake8 .
+
+       - name: Run tests
+         run: pytest -q
+
+       - name: Build package
+         run: python -m build
+         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+       - name: Upload build artifacts
+         uses: actions/upload-artifact@v4
+         with:
+           name: echo13-dist
+           path: dist/
+         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+publish:
+       name: Publish to PyPI
+       needs: build-test-lint
+       runs-on: ubuntu-latest
+       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+       steps:
+         - name: Check out repository
+           uses: actions/checkout@v4
+
+         - name: Download build artifacts
+           uses: actions/download-artifact@v4
+           with:
+           name: echo13-dist
+           path: dist/
+
+         - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.8.11
+        with:
+           user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}

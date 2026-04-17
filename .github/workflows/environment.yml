@@ -1,9 +1,0 @@
-   name: my-env
-   channels:
-    - defaults
-   dependencies:
-     - python=3.10
-     - pip
-   concurrency:
-     - pip: 
-      -r requirements.tx
