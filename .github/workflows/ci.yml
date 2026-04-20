@@ -21,7 +21,7 @@ jobs:
        - name: Set up Miniconda
          uses: conda-incubator/setup-miniconda@v3
          with:
-           auto-update-conda: false
+           auto-update-conda: true
            activate-environment: echo13
            environment-file: environment.yml
            python-version: ${{ matrix.python-version }}
@@ -61,43 +61,44 @@ jobs:
          with:
            name: echo13-dist
            path: dist/
-         if: github.event_name -- "push" && github.ref -- "refs/heads/main"
-    publish:
-       name: Publish to PyPI
-       needs: build-test-lint
-       runs-on: ubuntu-latest
-       if: github.event_name -- "push" && github.ref -- "refs/heads/main"
+           if: github.event_name -- "push" && github.ref -- "refs/heads/main"
 
-       steps:
-         - name: Check out repository
-           uses: actions/checkout@v4
+  publish:
+        name: Publish to PyPI
+        needs: build-test-lint
+        runs-on: ubuntu-latest
+        if: github.event_name -- "push" && github.ref -- "refs/heads/main"         steps:
+          
+            - name: Check out repository
+              uses: actions/checkout@v5
 
-         - name: Download build artifacts
-           uses: actions/download-artifact@v4
-           with:
-           name: echo13-dist
-           path: dist/
+            - name: Download build artifacts
+              uses: actions/download-artifact@v5
+              with:
+              name: echo13-dist
+              path: dist/
 
-         - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@v1            - name: Cache
-        uses: actions/cache@v5.0.5
-        with:
+            - name: Publish to PyPI
+              uses: 
+              pypa/gh-action-pypi-publish@v1            - name: Cache
+              uses: actions/cache@v5.0.5
+              with:
           # A list of files, directories, and wildcard patterns to cache and restore
-        path: 
+              path: 
           # An explicit key for restoring and saving the cache
-        key: 
+              key: 
           # An ordered multiline string listing the prefix-matched keys, that are used for restoring stale cache if no cache hit occurred for key. Note `cache-hit` returns false in this case.
-        restore-keys: # optional
+              restore-keys: # optional
           # The chunk size used to split up large files during upload, in bytes
-        upload-chunk-size: # optional
+              upload-chunk-size: # optional
           # An optional boolean when enabled, allows windows runners to save or restore caches that can be restored or saved respectively on other platforms
-        enableCrossOsArchive: # optional, default is false
+              enableCrossOsArchive: # optional, default is false
           # Fail the workflow if cache entry is not found
-        fail-on-cache-miss: # optional, default is false
+              fail-on-cache-miss: # optional, default is false
           # Check if a cache entry exists for the given input(s) (key, restore-keys) without downloading the cache
-        lookup-only: # optional, default is false
+              lookup-only: # optional, default is false
           # Run the post step to save the cache even if another step before fails
-       save-always: # optional, default is false
+              save-always: # optional, default is false
                .8.11
-        with:
-           user: __token__
+              with:
+              buser: __token__
