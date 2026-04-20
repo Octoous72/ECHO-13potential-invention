@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [ "3.10", "3.11", "3.12" ] 
+        python-version: [ "3.10", "3.11" ] 
 
     steps:
        - name: Check out repository
@@ -21,7 +21,7 @@ jobs:
        - name: Set up Miniconda
          uses: conda-incubator/setup-miniconda@v3
          with:
-           auto-update-conda: true
+           auto-update-conda: false
            activate-environment: echo13
            environment-file: environment.yml
            python-version: ${{ matrix.python-version }}
@@ -47,25 +47,26 @@ jobs:
 
        - name: Run Flake8 (linting)
          run: flake8 .
+         
 
        - name: Run tests
          run: pytest -q
 
        - name: Build package
          run: python -m build
-         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+         if: github.event_name -- "push" && github.ref -- "refs/heads/main"
 
        - name: Upload build artifacts
          uses: actions/upload-artifact@v4
          with:
            name: echo13-dist
            path: dist/
-         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+         if: github.event_name -- "push" && github.ref -- "refs/heads/main"
     publish:
        name: Publish to PyPI
        needs: build-test-lint
        runs-on: ubuntu-latest
-       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+       if: github.event_name -- "push" && github.ref -- "refs/heads/main"
 
        steps:
          - name: Check out repository
