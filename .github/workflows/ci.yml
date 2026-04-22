@@ -21,7 +21,7 @@ jobs:
        - name: Set up Miniconda
          uses: conda-incubator/setup-miniconda@v3
          with:
-           auto-update-conda: true
+           auto-update-conda: run
            activate-environment: echo13
            environment-file: environment.yml
            python-version: ${{ matrix.python-version }}
@@ -60,15 +60,36 @@ jobs:
          uses: actions/upload-artifact@v4
          with:
            name: echo13-dist
-           path: dist/
-           if: github.event_name -- "push" && github.ref -- "refs/heads/main"
+           path: dist/ Octoous72-patch-3
+        
+         if: github.event_name == 'push' && github.ref == 'refs/heads/main' publish
+         name: Publish to PyPI
+         needs: build-test-lint
+         runs-on: ubuntu-latest
+         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-  publish:
-        name: Publish to PyPI
-        needs: build-test-lint
-        runs-on: ubuntu-latest
-        if: github.event_name -- "push" && github.ref -- "refs/heads/main"         steps:
-          
+         steps:
+         - name: Check out repository
+           uses: actions/checkout@v4
+
+         - name: Download build artifacts
+           uses: actions/download-artifact@v4
+           with:
+           name: echo13-dist
+           path: dist/
+
+         - name: Publish to PyPI
+           uses: pypa/gh-action-pypi-publish@v1            - name: Cache
+           uses: actions/cache@v5.0.5
+           with:
+           if: github.event_name -- "push" && github.ref -- "refs/heads/main" publish
+           
+           name: Publish to PyPI
+           needs: build-test-lint
+           runs-on: ubuntu-latest
+           if: github.event_name -- "push" && github.ref -- "refs/heads/main"        
+           
+           steps:
             - name: Check out repository
               uses: actions/checkout@v5
 
