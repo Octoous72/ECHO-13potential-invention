@@ -26,7 +26,7 @@ env:
 
 jobs:
   setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
+    name: Setup-Build-Publish-Deploy
     runs-on: ubuntu-latest
     environment: production
     steps:
