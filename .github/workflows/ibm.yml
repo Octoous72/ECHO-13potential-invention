@@ -25,11 +25,11 @@ env:
   PORT: 5001
 
 jobs:
-  Setup-Build-Publish-Deploy:
-    name: Setup-Build-Publish-Deploy
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
+
+  name: Setup-Build-Publish-Deploy
+  runs-on: ubuntu-latest   
+  environment: production
+  steps:
 
     - name: Checkout
       uses: actions/checkout@v4
