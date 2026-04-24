@@ -77,20 +77,20 @@ jobs:
          runs-on: ubuntu-latest if:github.event_name == 'push' && github.ref == 'refs/heads/main'
          steps: 
           Octoous72-patch-5-1
-         - name: Check out repository
-           uses: actions/checkout@v4
+       - name: Check out repository
+         uses: actions/checkout@v4
 
-         - name: Download build artifacts
-           uses: actions/download-artifact@v4
-           with:
+       - name: Download build artifacts
+         uses: actions/download-artifact@v4
+         with:
            name: echo13-dist
            path: dist/
 
-         - name: Publish to PyPI
-            main
-           uses: pypa/gh-action-pypi-publish@v4            - name: Cache
-           uses: actions/cache@v5.0.5
-           with:
+       - name: Publish to PyPI
+          
+         uses: pypa/gh-action-pypi-publish@v4-name: cache
+         uses: actions/cache@v5.0.5
+         with:
            if: github.event_name -- "push" && github.ref -- "refs/heads/main" publish
            
            name: Publish to PyPI
@@ -110,7 +110,7 @@ jobs:
 
             - name: Publish to PyPI
               uses: 
-              pypa/gh-action-pypi-publish@v1            - name: Cache
+              pypa/gh-action-pypi-publish@v4            - name: Cache
               uses: actions/cache@v5.0.5
               with:
           # A list of files, directories, and wildcard patterns to cache and restore
