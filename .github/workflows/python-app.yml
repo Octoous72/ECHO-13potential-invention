@@ -11,7 +11,7 @@ on:
 
 jobs:
   lint:
-    name: Lint (flake8 & black)
+    name: _Lint (flake8 & black)
     runs-on: ubuntu-latest
 
     steps:
