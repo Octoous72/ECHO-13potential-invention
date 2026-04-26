@@ -10,9 +10,8 @@
   pull_request:
     branches:
     - main
-
- Octoous72-patch-1
- jobs:
+  
+    Octoous72-patch-1  jobs:
     build-linux:
      runs-on: ubuntu-latest
  strategy:
