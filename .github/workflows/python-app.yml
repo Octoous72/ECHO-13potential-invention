@@ -19,7 +19,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
@@ -33,18 +33,18 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install upgrade pip
         pip install flake8==6.1.0 black
 
     - name: Lint with flake8
       run: |
         echo "Running flake8..."
-        flake8 . --count --select=E9,F63,F7,F82 show-source
+        flake8 . count select=E9,F63,F7,F82 show-source
 
     - name: Check formatting with Black
       run: |
         echo "Checking code style with Black..."
-        black --check .
+        black check .
 
   test:
     name: Tests (matrix + coverage)
@@ -57,15 +57,15 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Cache pip dependencies
-      uses: actions/cache@v5
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}-test
@@ -75,7 +75,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install upgrade pip
         pip install pytest coverage
 
     - name: Run tests with pytest and coverage
@@ -92,15 +92,15 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
     - name: Cache pip dependencies
-      uses: actions/cache@v5
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-security
@@ -109,7 +109,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install upgrade pip
         pip install -r requirements.txt
         pip install pip-audit
 
@@ -125,16 +125,16 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
     - name: Install build tools
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install upgrade pip
         pip install build
 
     - name: Build distribution
@@ -143,7 +143,7 @@ jobs:
         python -m build
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         name: dist
         path: dist/
@@ -158,18 +158,15 @@ jobs:
 
     steps:
      - name: Checkout repository
-       uses: actions/checkout@v5
+       uses: actions/checkout@v4
 
      - name: Set up Python
-       uses: actions/setup-python@v5
+       uses: actions/setup-python@v4
        with:
         python-version: "3.10"
 
      - name: Download build artifacts
-       uses: actions/download-artifact@v5
-       with:
-        name: dist
-        path: dist/
+       uses: actions/download-artifact@v4
 
      - name: Publish to PyPI
        uses: pypa/gh-action-pypi-publish@release/v5
