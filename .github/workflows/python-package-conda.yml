@@ -19,45 +19,44 @@
      matrix:
      python-version: ["3.10", "3.11"]
 
-jobs:
+ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
       matrix:
-        python-version: ["3.10", "3.11"]
- main
+        python-version: ["3.10", "3.11", "3.12"]
+         
 
- steps:
-   - uses: actions/checkout@v4
+    steps:
+    - uses: actions/checkout@v4
     
- Octoous72-patch-1
-   - name: Set up Conda
-     uses: conda-incubator/setup-miniconda@v3
-     with:
+    - name: Set up Conda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
         auto-update-conda: true
     - name: Set up Conda
       uses: conda-incubator/setup-miniconda@v3
       with:
         auto-update-conda: run
- main
+        
         python-version: ${{ matrix.python-version }}
         
-   - name: Install dependencies
-     shell: bash -l {0}
-     run: |
-        conda env update --file environment.yml --name base
+    - name: Install dependencies
+      shell: bash -l {0}
+      run: |
+        conda env update file environment.yml name base
         
- Octoous72-patch-1
-   - name: Lint with flake8
-     shell: bash -l {0}
-     run: |
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Install lint tools
+      run: python -m pip install flake8
 
-     - name: Lint with flake8
-       shell: bash -l {0}.github/workflows/python-package-conda.yml            - name: Setup Node.js environment
+    - name: Lint with flake8
+      run: python -m flake8 . -count -select=E9,F63,F7,F82 -show-source -statistics
+
+    - name: Lint with flake8
+       shell bash -l {0}.github/workflows/python-package-conda.yml          
+    - name: Setup Node.js environment
   uses: actions/setup-node@v6.4.0
   with:
     # Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
