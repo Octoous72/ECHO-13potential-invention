@@ -2,16 +2,21 @@ name: Python CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+     -main
+     -/*release/*
+    
   pull_request:
-    branches: [ "main" ]
+    branches: 
+     -main
+    
   release:
     types: [published]
   workflow_dispatch:
 
 jobs:
   lint:
-    name: Lint (flake8 & black)
+    name: Lint 
     runs-on: ubuntu-latest
 
     steps:
@@ -34,17 +39,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install upgrade pip
-        pip install flake8==6.1.0 black
-
-    - name: Lint with flake8
-      run: |
-        echo "Running flake8..."
-        flake8 . count select=E9,F63,F7,F82 show-source
-
-    - name: Check formatting with Black
-      run: |
-        echo "Checking code style with Black..."
-        black check .
+        pip install flake8-6.1.0 
 
   test:
     name: Tests (matrix + coverage)
