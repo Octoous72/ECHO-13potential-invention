@@ -3,13 +3,13 @@
  on:
    push:
      branches:
-     - main
-     - release/*
+      -main
+      -release/*
     
  on: 
   pull_request:
-    branches:
-    - main
+     branches:
+      -main
   
  jobs:
     build-linux:
@@ -17,7 +17,7 @@
     strategy:
       max-parallel: 5
       matrix:
-      python-version: ["3.10", "3.11", "3.12"]
+      python-version: ["3.9", "3.10", "3.11", "3.12"]
 
  jobs:
     build-linux:
@@ -25,7 +25,7 @@
     strategy:
       max-parallel: 5
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
          
 
     steps:
@@ -46,12 +46,7 @@
     shell: bash -l {0}
     run: |
         conda env update file environment.yml name base
-        
-    -name: Install lint tools
-    run: python -m pip install flake8
-
-    -name: Lint with flake8
-       shell bash -l {0}.github/workflows/python-package-conda.yml          
+    
     -name: Setup Node.js environment
     uses: actions/setup-node@v6.4.0
     with:
