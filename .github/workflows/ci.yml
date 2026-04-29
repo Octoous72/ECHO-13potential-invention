@@ -1,20 +1,16 @@
 name: ECHO-13 CI Pipeline
-
 on:
   push:
     branches: 
      -main
      -release/*
-    
-  pull_request:
-   -main
   
 jobs:
   my-job:
-    permissions:
+    permissions: continue-on-error: 
       contents: read
-      pull-requests: write
-jobs:
+      pull-requests: write:
+      
   build-test-lint:
     name: Lint, Test, and Build
     runs-on: ubuntu-latest
