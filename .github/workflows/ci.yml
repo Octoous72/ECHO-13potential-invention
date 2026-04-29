@@ -1,20 +1,16 @@
 name: ECHO-13 CI Pipeline
-
 on:
   push:
     branches: 
      -main
      -release/*
-    
-  pull_request:
-   -main
   
 jobs:
   my-job:
-    permissions:
+    permissions: continue-on-error: 
       contents: read
-      pull-requests: write
-jobs:
+      pull-requests: write:
+      
   build-test-lint:
     name: Lint, Test, and Build
     runs-on: ubuntu-latest
@@ -82,7 +78,6 @@ jobs:
            path: dist/
 
          - name: Publish to PyPI
-           uses: pypa/gh-action-pypi-publish@v1            - name: Cache
            uses: actions/cache@v5.0.5
            with:
           # A list of files, directories, and wildcard patterns to cache and restore
