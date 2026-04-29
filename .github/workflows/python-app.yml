@@ -3,27 +3,27 @@ name: Python CI
 on:
   push:
     branches: 
-     -main
-     -release/*
+     - main
+     - release/*
      
   pull_request:
     branches: 
-     -main
+     - main
 
   release:
     types: [published]
 
-    steps:
-    -name: Checkout repository
-    uses: actions/checkout@v5
-
-    -name: Set up Python
-    uses: actions/setup-python@v5
-    with:
-    python-version: ["3.10", "3.11", "3.12"] 
+  steps:
+  - name: Checkout repository
+  uses: actions/checkout@v4
+  
+  -name: Set up Python 
+  uses: actions@v4
+  with:
+  python-version: ["3.10", "3.11", "3.12"] 
    
-    uses: actions/cache@v5
-    with:
+  uses: actions/cache@v4
+  with:
 jobs:
   lint:
     name: Lint 
@@ -31,15 +31,15 @@ jobs:
 
     steps:
       name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
       -name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: ["3.10", "3.11", "3.12"]
 
       -name: Cache pip dependencies
-      uses: actions/cache@v5
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-lint
@@ -62,15 +62,15 @@ jobs:
 
   steps:
     -name: Checkout repository
-    uses: actions/checkout@v5
+    uses: actions/checkout@v4
 
     -name: Set up Python ${{ matrix.python-version }}
-    uses: actions/setup-python@v5
+    uses: actions/setup-python@v4
   with:
    python-version: ${{ matrix.python-version }} 
    -name: Cache pip dependencies
    branch_protection_rule: 
-uses: actions/cache@v5
+uses: actions/cache@v4
 with:
        path: ~/.cache/pip
        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}-test
@@ -83,15 +83,15 @@ run: |
      pip install pytest coverage -name: Run tests with pytest and coverage run:  echo "Running tests with pytest..."
      steps:
       -name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
       -name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
       -name: Cache pip dependencies
-      uses: actions/cache@v5
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}-test
@@ -117,15 +117,15 @@ security:
 
     steps:
       -name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
       -name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: [ "3.10", "3.11", "3.12"]
 
       -name: Cache pip dependencies
-      uses: actions/cache@v5
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-security
@@ -149,12 +149,12 @@ security:
 
     steps:
       -name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
       -name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: [ "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
 
       -name: Install build tools
       run: |
@@ -167,7 +167,7 @@ security:
         python -m build
         
       -name: Upload build artifacts
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
        name: dist
        path: dist/ publish:
@@ -177,7 +177,7 @@ security:
        needs: build
 
       -name: Upload build artifacts
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         name: dist
         
@@ -188,7 +188,7 @@ security:
    
     steps:
        -name: Checkout repository
-       uses: actions/checkout@v5
+       uses: actions/checkout@v4
 
        -name: Set up Python
        uses: actions/setup-python@v4
@@ -196,15 +196,15 @@ security:
         python-version: ["3.10", "3.11", "3.12"]
  
        -name: Download build artifacts
-       uses: actions/download-artifact@v5
+       uses: actions/download-artifact@v4
 
        -name: Publish to PyPI
-       uses: pypa/gh-action-pypi-publish@release/v5
+       uses: pypa/gh-action-pypi-publish@release/v4
        with:
         password: ${{ secrets.PYPI_API_TOKEN }}
 
        -name: Cache
-       uses: actions/cache@v5.0.5
+       uses: actions/cache@v4.0.1
        with:
          # A list of files, directories, and wildcard patterns to cache and restore
          path: 
