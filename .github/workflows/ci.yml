@@ -82,7 +82,6 @@ jobs:
            path: dist/
 
          - name: Publish to PyPI
-           uses: pypa/gh-action-pypi-publish@v5           - name: Cache
            uses: actions/cache@v5.0.5
            with:
           # A list of files, directories, and wildcard patterns to cache and restore
