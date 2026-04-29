@@ -1,51 +1,226 @@
-name: ECHO-13 CI
+name: Python CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+     -main
+     -release/*
+     
   pull_request:
-    branches: [ "main" ]
+    branches: 
+     -main
 
-permissions:
-  contents: read
-
-jobs:
-  test:
-    name: Test (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-
-    env:
-      PYTHONPATH: ${{ github.workspace }}
+  release:
+    types: [published]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    -name: Checkout repository
+    uses: actions/checkout@v5
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
+    -name: Set up Python
+    uses: actions/setup-python@v5
+    with:
+    python-version: ["3.10", "3.11", "3.12"] 
+   
+    -name: Cache pip dependencies
+    uses: actions/cache@v5
+    with:
+jobs:
+  lint:
+    name: Lint 
+    runs-on: ubuntu-latest
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install flake8 pytest
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    steps:
+      name: Checkout repository
+      uses: actions/checkout@v5
 
-      - name: Lint with flake8
-        run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
-     
-      - name: Verify example syntax
-        run: |
-          for f in examples/*.py; do
-            echo "Checking: $f"
-            python -m py_compile "$f" || exit 1
-          done
-          echo "All examples parse successfully."
+      -name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ["3.10", "3.11", "3.12"]
+
+      -name: Cache pip dependencies
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-lint
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    -name: Install dependencies
+    run: |
+        python -m pip install upgrade pip
+   
+  -needs: tests (matrix + coverage)
+  run: ubuntu-latest
+
+  test:
+    name: Tests (matrix + coverage)
+    runs-on: ubuntu-latest
+
+    matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+  steps:
+    -name: Checkout repository
+    uses: actions/checkout@v5
+
+    -name: Set up Python ${{ matrix.python-version }}
+    uses: actions/setup-python@v5
+  with:
+   python-version: ${{ matrix.python-version }} 
+   -name: Cache pip dependencies
+   branch_protection_rule: 
+uses: actions/cache@v5
+with:
+       path: ~/.cache/pip
+       key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}-test
+       restore-keys: |
+        ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          
+-name: Install dependencies
+run: |
+     python -m pip install upgrade pip
+     pip install pytest coverage -name: Run tests with pytest and coverage run:  echo "Running tests with pytest..."
+     steps:
+      -name: Checkout repository
+      uses: actions/checkout@v5
+
+      -name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+      -name: Cache pip dependencies
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}-test
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ matrix.python-version }}-
+
+       -name: Install dependencies
+      run: |
+        python -m pip install upgrade pip
+        pip install pytest coverage
+
+       -name: Run tests with pytest and coverage
+      run: |
+        echo "Running tests with pytest..."
+        coverage run -m pytest -v
+        echo "Generating coverage report..."
+        coverage report -m
+
+security:
+    name: Dependency security scan
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      -name: Checkout repository
+      uses: actions/checkout@v5
+
+      -name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: [ "3.10", "3.11", "3.12"]
+
+      -name: Cache pip dependencies
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-security
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+      -name: Install dependencies
+      run: |
+        python -m pip install upgrade pip
+        pip install -r requirements.txt
+        pip install pip-audit
+
+      -name: Run pip-audit
+      run: |
+        echo "Running pip-audit for dependency vulnerabilities..."
+        pip-audit
+    build:
+    name: Build package
+    runs-on: ubuntu-latest
+    needs: security
+
+    steps:
+      -name: Checkout repository
+      uses: actions/checkout@v5
+
+      -name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: [ "3.10", "3.11", "3.12"]
+
+      -name: Install build tools
+      run: |
+        python -m pip install upgrade pip
+        pip install build
+
+      -name: Build distribution
+      run: |
+        echo "Building source and wheel distributions..."
+        python -m build
+        
+      -name: Upload build artifacts
+      uses: actions/upload-artifact@v5
+      with:
+       name: dist
+       path: dist/ publish:
+       
+       name: Publish to PyPI
+       runs-on: ubuntu-latest
+       needs: build
+
+      -name: Upload build artifacts
+      uses: actions/upload-artifact@v5
+      with:
+        name: dist
+        
+    publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: build
+   
+    steps:
+       -name: Checkout repository
+       uses: actions/checkout@v5
+
+       -name: Set up Python
+       uses: actions/setup-python@v4
+       with:
+        python-version: ["3.10", "3.11", "3.12"]
+ 
+       -name: Download build artifacts
+       uses: actions/download-artifact@v5
+
+       -name: Publish to PyPI
+       uses: pypa/gh-action-pypi-publish@release/v5
+       with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+
+       -name: Cache
+       uses: actions/cache@v5.0.5
+       with:
+         # A list of files, directories, and wildcard patterns to cache and restore
+         path: 
+         # An explicit key for restoring and saving the cache
+         key: 
+         # An ordered multiline string listing the prefix-matched keys, that are used for restoring stale cache if no cache hit occurred for key. Note `cache-hit` returns false in this case.
+         restore-keys: # optional
+         # The chunk size used to split up large files during upload, in bytes
+         upload-chunk-size: # optional
+         # An optional boolean when enabled, allows windows runners to save or restore caches that can be restored or saved respectively on other platforms
+         enableCrossOsArchive: # optional, default is false
+         # Fail the workflow if cache entry is not found
+         fail-on-cache-miss: # optional, default is false
+         # Check if a cache entry exists for the given input(s) (key, restore-keys) without downloading the cache
+         lookup-only: # optional, default is false
+         # Run the post step to save the cache even if another step before fails
+         save-always: # optional, default is false
+          
