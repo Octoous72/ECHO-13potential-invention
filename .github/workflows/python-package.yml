@@ -5,9 +5,13 @@ name: Python package
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+    - main
+    - release/*
+    
   pull_request:
-    branches: [ "main" ]
+    branches: 
+    - main
 
 jobs:
   build:
@@ -21,7 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
