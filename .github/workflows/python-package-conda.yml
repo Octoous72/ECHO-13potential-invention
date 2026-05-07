@@ -2,9 +2,12 @@ name: Python Package using Conda
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: 
+    - main
+    - develop*/
   pull_request:
-    branches: [ main ]
+    branches: 
+    - main
 
 jobs:
 
@@ -19,9 +22,9 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Set up Conda
-      uses: conda-incubator/setup-miniconda@v3
+      uses: conda-incubator/setup-miniconda@v4
       with:
-        auto-update-conda: run
+        auto-update-conda: true
         python-version: ${{ matrix.python-version }}
         
     - name: Install dependencies
@@ -29,8 +32,8 @@ jobs:
       run: |
         conda env update --file environment.yml --name base
         
-     - name: Lint with flake8
-       shell: bash -l {0}.github/workflows/python-package-conda.yml            - name: Setup Node.js environment
+    - name: Lint with flake8
+      shell: bash -l {0}.github/workflows/python-package-conda.yml            - name: Setup Node.js environment
   uses: actions/setup-node@v6.4.0
   with:
     # Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
