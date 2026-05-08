@@ -86,7 +86,7 @@ jobs:
          repo-token: ${{ github.token }}
     # The message to post on the issue when tagging it. If none provided, will not mark issues stale.
          stale-issue-message: # optional
-   # The message to post on the pull request when tagging it. If none provided, will not mark pull requests stale.
+    # The message to post on the pull request when tagging it. If none provided, will not mark pull requests stale.
          stale-pr-message: # optional
     # The message to post on the issue when closing it. If none provided, will not comment when closing an issue.
          close-issue-message: # optional
