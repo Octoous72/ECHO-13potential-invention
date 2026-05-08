@@ -3,12 +3,11 @@ name: Python CI
 on:
   push:
     branches: 
-     - main
-     - release/*
-     
+    - main
+    - release/*
   pull_request:
     branches: 
-     - main
+    - main
 
   release:
     types: [published]
